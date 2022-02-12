@@ -1,0 +1,19 @@
+{
+  "name": "asyncly",
+  "version": "0.1.0",
+  "description": "Async utilties for batching and only once function execution",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weinandt/asyncly.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/weinandt/asyncly/issues"
+  },
+  "homepage": "https://github.com/weinandt/asyncly#readme"
+}
