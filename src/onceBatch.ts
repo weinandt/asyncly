@@ -1,9 +1,12 @@
-export interface BatchConfig<T, U> {
+export interface OnceBatchConfig<T, U> {
     maxSize: number
     asyncFunction: (batch: T[]) => Promise<U>
 }
 
-export class Batch<InputType, ResultType> {
+/**
+ * Asynchronously batches an input, then executes an async function over the entire batch, just once.
+ */
+export class OnceBatch<InputType, ResultType> {
     private batch: InputType[]
     private maxBatchSize: number
     private finalResolve!: (value: ResultType) => void
@@ -11,7 +14,7 @@ export class Batch<InputType, ResultType> {
     private finalPromise: Promise<ResultType>
     private asyncFunction: (batch: InputType[]) => Promise<ResultType>
 
-    constructor(config: BatchConfig<InputType,ResultType>) {
+    constructor(config: OnceBatchConfig<InputType,ResultType>) {
         this.maxBatchSize = config.maxSize
         this.asyncFunction = config.asyncFunction
 

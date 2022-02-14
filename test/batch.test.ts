@@ -1,5 +1,5 @@
 import * as assert from 'assert'
-import { Batch } from '../src/batch'
+import { OnceBatch } from '../src/onceBatch'
 
 describe('Batch tests.', () => {
     it('Function should only execute once.', async () => {
@@ -16,7 +16,7 @@ describe('Batch tests.', () => {
         }
 
         const batchSize = 3
-        const batch = new Batch<number, boolean>({
+        const batch = new OnceBatch<number, boolean>({
             maxSize: batchSize,
             asyncFunction: asyncFunction
         })
