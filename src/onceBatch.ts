@@ -15,8 +15,19 @@ export class OnceBatch<InputType, ResultType> {
     private asyncFunction: (batch: InputType[]) => Promise<ResultType>
 
     constructor(config: OnceBatchConfig<InputType,ResultType>) {
+        if (config == null) {
+            throw new Error('Config cannot be null.')
+        }
+
         this.maxBatchSize = config.maxSize
+        if (this.maxBatchSize == null || this.maxBatchSize < 1) {
+            throw new Error('Batch size must be a number greater than 0.')
+        }
+
         this.asyncFunction = config.asyncFunction
+        if (this.asyncFunction == null) {
+            throw new Error('Async function must be supplied to batch.')
+        }
 
         this.finalPromise = new Promise<ResultType>((resolve, reject) => {
             this.finalResolve = resolve 
