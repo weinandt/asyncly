@@ -1,6 +1,7 @@
 export interface OnceBatchConfig<T, U> {
     maxSize: number
     asyncFunction: (batch: T[]) => Promise<U>
+    maxWaitTimeInMS?: number
 }
 
 /**
@@ -13,6 +14,9 @@ export class OnceBatch<InputType, ResultType> {
     private finalReject!: (reason?: any) => void
     private finalPromise: Promise<ResultType>
     private asyncFunction: (batch: InputType[]) => Promise<ResultType>
+    private _canAddToBatch: boolean
+    private maxWaitTimeInMS?: number
+    private timeout?: NodeJS.Timeout
 
     constructor(config: OnceBatchConfig<InputType,ResultType>) {
         if (config == null) {
@@ -35,6 +39,17 @@ export class OnceBatch<InputType, ResultType> {
         })
 
         this.batch = []
+        this._canAddToBatch = true
+        this.maxWaitTimeInMS = config.maxWaitTimeInMS
+    }
+
+    private markBatchAsFullAndExecute() {
+        this._canAddToBatch = false
+        if (this.timeout != null) {
+            clearTimeout(this.timeout)
+        }
+
+        this.execute()
     }
 
     private async execute() {
@@ -47,13 +62,29 @@ export class OnceBatch<InputType, ResultType> {
         }
     }
 
+    private startTimer() {
+        this.timeout = setTimeout(() => {
+            this.markBatchAsFullAndExecute()
+        }, this.maxWaitTimeInMS)
+        this.timeout.unref()
+    }
+
     public async addToBatchAndGetResult(item: InputType) {
         this.batch.push(item)
 
+        // If this is the first item and timouts are configured, should start timer.
+        if (this.batch.length == 1 && this.maxWaitTimeInMS != null) {
+            this.startTimer()
+        }
+
         if (this.batch.length >= this.maxBatchSize) {
-            this.execute()
+            this.markBatchAsFullAndExecute()
         }
 
         return this.finalPromise
+    }
+
+    public get canAddToBatch(): boolean {
+        return this._canAddToBatch
     }
 }
