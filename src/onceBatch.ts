@@ -69,7 +69,7 @@ export class OnceBatch<InputType, ResultType> {
         this.timeout.unref()
     }
 
-    public async addToBatchAndGetResult(item: InputType) {
+    public async addToBatchAndGetResult(item: InputType): Promise<ResultType> {
         this.batch.push(item)
 
         // If this is the first item and timouts are configured, should start timer.
