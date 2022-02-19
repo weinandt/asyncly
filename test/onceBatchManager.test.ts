@@ -30,4 +30,29 @@ describe('OnceBatchManager', () => {
 
         assert.deepEqual(result, [true, false], 'result should have been true')
     })
+    it('Async function rejecting will not stop batch from being used', async () => {
+        // Arrange
+        // First time will throw, second time will not
+        let numCalls = 0
+        const asyncFunction = (batch: number[]) => new Promise((resolve, reject) => {
+            setTimeout(() => {
+                if (numCalls == 0) {
+                    numCalls++
+                    reject(new Error('First time throwing'))
+                }
+                else {
+                    resolve(numCalls)
+                }
+            }, 0)
+        })
+
+        const batch = new OnceBatchManager<number, any>({
+            maxSize: 1,
+            asyncFunction,
+        })
+
+        // Assert (first time throws, second time should be fine).
+        await assert.rejects(batch.addToBatchAndGetResult(0))
+        await assert.doesNotReject(batch.addToBatchAndGetResult(0))
+    })
 })

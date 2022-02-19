@@ -33,4 +33,3 @@ const result = await Promise.all([firstInsertPromise, secondInsertPromise])
 
 ## TODO
 - Publish to npm.
-- Handle execeptions being throw in the async function passed by the caller.
