@@ -2,7 +2,7 @@
   "name": "asyncly",
   "version": "0.1.0",
   "description": "Async utilties for batching and only once function execution",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
     "test": "mocha --require ts-node/register 'test/**/*.test.ts'",
     "build": "tsc"
