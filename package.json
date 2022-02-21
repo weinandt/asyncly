@@ -1,11 +1,12 @@
 {
   "name": "asyncly",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Async utilties for batching and only once function execution",
   "main": "lib/index.js",
   "scripts": {
     "test": "mocha --require ts-node/register 'test/**/*.test.ts'",
-    "build": "tsc"
+    "build": "tsc",
+    "publish-npm": "npm publish --access public"
   },
   "repository": {
     "type": "git",
